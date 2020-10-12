@@ -8,6 +8,7 @@
 
 import React, { FC, useState } from 'react';
 import { Text, View, StyleSheet, PanResponder, TouchableOpacity, Button } from 'react-native';
+import { Icon } from 'react-native-elements'
 
 const styles = StyleSheet.create({
   container: {
@@ -37,11 +38,6 @@ const App: FC = () => {
     // evaluate code expression
     setTotal(prevTotal => eval(prevTotal));
   }
-  // add
-
-  // minus
-
-  // number
 
   return (
     <View style={styles.container}>
@@ -55,6 +51,11 @@ const App: FC = () => {
         </TouchableOpacity >
         <TouchableOpacity style={styles.button} onPress={() => onClick('*')}>
           <Text>*</Text>
+        </TouchableOpacity >
+        <TouchableOpacity style={styles.button} onPress={() => onClick('*')}>
+          <Icon name="backspace"
+            type='font-awesome5'
+          />
         </TouchableOpacity >
       </View>
       <View style={{ flexDirection: "row" }}>
