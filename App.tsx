@@ -7,19 +7,16 @@
  */
 
 import React, { FC, useState } from 'react';
-import { Text, View, StyleSheet, PanResponder, TouchableOpacity, Button } from 'react-native';
+import { Text, View, StyleSheet, PanResponder, TouchableOpacity } from 'react-native';
 import { Icon } from 'react-native-elements'
+import Button from './component/button';
+import Row from './component/row';
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  button: {
-    alignItems: 'center',
-    backgroundColor: '#DDDDDD',
-    padding: 10
   }
 })
 
@@ -42,75 +39,36 @@ const App: FC = () => {
   return (
     <View style={styles.container}>
       <Text>{total}</Text>
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity style={styles.button} onPress={() => onReset()}>
-          <Text>C</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('/')}>
-          <Text>/</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('*')}>
-          <Text>*</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('*')}>
-          <Icon name="backspace"
-            type='font-awesome5'
-          />
-        </TouchableOpacity >
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity style={styles.button} onPress={() => onClick('1')}>
-          <Text>1</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('2')}>
-          <Text>2</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('3')}>
-          <Text>3</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('-')}>
-          <Text>-</Text>
-        </TouchableOpacity >
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity style={styles.button} onPress={() => onClick('4')}>
-          <Text>4</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('5')}>
-          <Text>5</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('6')}>
-          <Text>6</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('+')}>
-          <Text>+</Text>
-        </TouchableOpacity >
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity style={styles.button} onPress={() => onClick('7')}>
-          <Text>7</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('8')}>
-          <Text>8</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('9')}>
-          <Text>9</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={onEval}>
-          <Text>=</Text>
-        </TouchableOpacity >
-      </View>
-      <View style={{ flexDirection: "row" }}>
-        <TouchableOpacity style={styles.button}>
-          <Text></Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('0')}>
-          <Text>0</Text>
-        </TouchableOpacity >
-        <TouchableOpacity style={styles.button} onPress={() => onClick('.')}>
-          <Text>.</Text>
-        </TouchableOpacity >
-      </View>
+      <Row>
+        <Button onPress={onReset} label='C'></Button>
+        <Button onPress={() => onClick('/')} label='/'></Button>
+        <Button onPress={() => onClick('*')} label='*'></Button>
+        <Button onPress={() => onClick('')} label='back'></Button>
+      </Row>
+      <Row>
+        <Button onPress={() => onClick('1')} label='1'></Button>
+        <Button onPress={() => onClick('2')} label='2'></Button>
+        <Button onPress={() => onClick('3')} label='3'></Button>
+        <Button onPress={() => onClick('-')} label='-'></Button>
+      </Row>
+      <Row>
+        <Button onPress={() => onClick('4')} label='4'></Button>
+        <Button onPress={() => onClick('5')} label='5'></Button>
+        <Button onPress={() => onClick('6')} label='6'></Button>
+        <Button onPress={() => onClick('+')} label='+'></Button>
+      </Row>
+      <Row>
+        <Button onPress={() => onClick('7')} label='7'></Button>
+        <Button onPress={() => onClick('8')} label='8'></Button>
+        <Button onPress={() => onClick('9')} label='9'></Button>
+        <Button onPress={onEval} label='='></Button>
+      </Row>
+      <Row>
+        <Button onPress={() => onClick('')} label=''></Button>
+        <Button onPress={() => onClick('0')} label='0'></Button>
+        <Button onPress={() => onClick('.')} label='.'></Button>
+        <Button onPress={() => onClick('')} label=''></Button>
+      </Row>
     </View>
   )
 }
