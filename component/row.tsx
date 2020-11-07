@@ -1,20 +1,23 @@
 import React, { FC } from 'react';
-import { View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 
 type Props = {
-    children: JSX.Element[];
+    children: JSX.Element[] | JSX.Element;
 }
 
-// const Row = ({ children }: Props) => (
-
-//         <View style={{ flexDirection: "row" }}>{children}</View>
-// )
+const styles = StyleSheet.create({
+    row: {
+        flexDirection: 'row', // align children from left to right
+        alignContent: 'stretch',
+        flexWrap: 'wrap'
+    }
+})
 
 const Row: FC<Props> = (props) => {
     const { children } = props;
     return (
-        <View style={{ flexDirection: "row" }}>{children}</View>
+        <View style={styles.row}>{children}</View>
     );
 }
 
