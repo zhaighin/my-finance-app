@@ -8,12 +8,11 @@
 
 import React, { FC, useState } from 'react';
 import { Text, View, StyleSheet, PanResponder, TouchableOpacity, ViewPropTypes } from 'react-native';
-import { Icon } from 'react-native-elements'
 import Button from './component/button';
 import Row from './component/row';
+import * as CONST from './util/const';
 
 const styles = StyleSheet.create({
-
   container: {
     flex: 1 // fill over the space
   },
@@ -36,19 +35,96 @@ const styles = StyleSheet.create({
 })
 
 const App: FC = () => {
-  const [total, setTotal] = useState<string>('');
+  const [total, setTotal] = useState<string>('0');
+  // to prevent backspace error
+  const [finalize, setFinalize] = useState<boolean>(false);
 
   const onClick = (item: string) => {
-    setTotal(prevTotal => prevTotal + item);
+    // if input is operator, validate previous input is an operator
+    // if yes, replace it, else add
+    // if input is number, add
+    // if is backspace, slice the last character
+    if (checkIsOperator(item) && !validateInput()) {
+      setTotal(prevTotal => {
+        const replace = prevTotal.slice(0, -1);
+        return replace + item;
+      });
+    } else if (item === CONST.BACKSPACE) {
+      if (finalize) {
+        return;
+      }
+      setTotal(prevTotal => prevTotal.slice(0, -1));
+    } else {
+      setTotal(prevTotal => {
+        if ((prevTotal == '0' || prevTotal == 'Infinity') && !checkIsOperator(item)) {
+          if (item == '0' || item === '00') {
+            return '0';
+          }
+          return item;
+        }
+
+        return prevTotal + item;
+      });
+      setFinalize(false);
+    }
+  }
+
+  const checkIsOperator = (text: string) => {
+    switch (text) {
+      case CONST.PLUS:
+      case CONST.MINUS:
+      case CONST.MULTIPLY:
+      case CONST.DIVIDE:
+        return true;
+    }
+
+    return false;
   }
 
   const onReset = () => {
-    setTotal('');
+    setTotal('0');
+  }
+
+  const validateInput = () => {
+    const text = total;
+
+    if (finalize) {
+      return true;
+    }
+
+    switch (text.slice(-1)) {
+      case CONST.PLUS:
+      case CONST.MINUS:
+      case CONST.MULTIPLY:
+      case CONST.DIVIDE:
+        return false;
+    }
+
+    return true;
   }
 
   const onEval = () => {
-    // evaluate code expression
-    setTotal(prevTotal => eval(prevTotal));
+    if (validateInput()) {
+      // evaluate code expression
+      setTotal(prevTotal => eval(prevTotal));
+      setFinalize(true);
+    }
+  }
+
+  const renderButton = (label: string, theme?: string, isIcon?: boolean) => {
+    let action;
+    let size;
+
+    if (label == CONST.CLEAR) {
+      action = onReset;
+    } else if (label == CONST.EQUAL) {
+      action = onEval;
+      size = "double";
+    } else {
+      action = () => onClick(label);
+    }
+
+    return (<Button onPress={action} theme={theme} label={label} isIcon={isIcon} size={size}></Button>)
   }
 
   return (
@@ -57,41 +133,38 @@ const App: FC = () => {
         <Text style={styles.displayText}>{total}</Text>
       </View>
       <Row>
-        <Button onPress={onReset} theme="secondary" label='C'></Button>
-        <Button onPress={() => onClick('*')} theme="secondary" label='*'></Button>
-        <Button onPress={() => onClick('/')} theme="secondary" label='/'></Button>
-        <Button onPress={() => onClick('')} theme="secondary" label='backspace' isIcon={true}></Button>
+        {renderButton(CONST.CLEAR, "secondary")}
+        {renderButton(CONST.MULTIPLY, "secondary")}
+        {renderButton(CONST.DIVIDE, "secondary")}
+        {renderButton(CONST.BACKSPACE, "secondary", true)}
       </Row>
       <Row>
-        <Button onPress={() => onClick('1')} label='1'></Button>
-        <Button onPress={() => onClick('2')} label='2'></Button>
-        <Button onPress={() => onClick('3')} label='3'></Button>
-        <Button onPress={() => onClick('-')} theme="secondary" label='-'></Button>
+        {renderButton('7')}
+        {renderButton('8')}
+        {renderButton('9')}
+        {renderButton(CONST.MINUS, "secondary")}
       </Row>
       <Row>
-        <Button onPress={() => onClick('4')} label='4'></Button>
-        <Button onPress={() => onClick('5')} label='5'></Button>
-        <Button onPress={() => onClick('6')} label='6'></Button>
-        <Button onPress={() => onClick('+')} theme="secondary" label='+'></Button>
+        {renderButton('4')}
+        {renderButton('5')}
+        {renderButton('6')}
+        {renderButton(CONST.PLUS, "secondary")}
       </Row>
       <Row>
         <View style={{}}>
           <Row>
-            <Button onPress={() => onClick('7')} label='7'></Button>
-            <Button onPress={() => onClick('8')} label='8'></Button>
-            <Button onPress={() => onClick('9')} label='9'></Button>
+            {renderButton('1')}
+            {renderButton('2')}
+            {renderButton('3')}
           </Row>
-
           <Row>
-            <Button onPress={() => onClick('.')} label='.'></Button>
-            <Button onPress={() => onClick('0')} label='0'></Button>
-            <Button onPress={() => onClick('')} label='+/-'></Button>
+            {renderButton('.')}
+            {renderButton('0')}
+            {renderButton('00')}
           </Row>
         </View>
-        <Button size="double" theme="accent" onPress={onEval} label='='></Button>
+        {renderButton(CONST.EQUAL, "accent")}
       </Row>
-
-
     </View>
   )
 }
